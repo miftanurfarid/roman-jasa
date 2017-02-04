@@ -17,10 +17,12 @@ x = randn(1,441*40)*3000; %400 ms of white noise simulated at target location
 simulateSignal(x,Az(1),'target');
 
 if ispc == 1
+    dir_ch = '\';
     !targetITD target
 end
 
 if isunix == 1
+    dir_ch = '/';
     !./targetITD target
 end
 
@@ -46,11 +48,11 @@ if order_conf == 2
             fprintf('ind_T = %d\n',ind_T)
             fprintf('ind_N = %d\n',ind_N)
 
-            name = strcat('TRAINSET\','T',int2str(ind_T));
+            name = strcat('TRAINSET',dir_ch,'T',int2str(ind_T));
             x1   = load(name);
             x1   = resample(x1,F1,F2);
 
-            name = strcat('TRAINSET\','T',int2str(ind_N));   
+            name = strcat('TRAINSET',dir_ch,'T',int2str(ind_N));   
             x2   = load(name);
             x2   = resample(x2,F1,F2);
 
@@ -87,15 +89,15 @@ if order_conf == 3
                 fprintf('ind_N1 %d\n',ind_N1);
                 fprintf('ind_N2 %d\n',ind_N2);
                 
-                name = strcat('TRAINSET\','T',int2str(ind_T));
+                name = strcat('TRAINSET',dir_ch,'T',int2str(ind_T));
                 x1   = load(name);
                 x1   = resample(x1,F1,F2);
                 
-                name = strcat('TRAINSET\','T',int2str(ind_N1));
+                name = strcat('TRAINSET',dir_ch,'T',int2str(ind_N1));
                 x2   = load(name);
                 x2   = resample(x2,F1,F2);
                 
-                name = strcat('TRAINSET\','T',int2str(ind_N2));   
+                name = strcat('TRAINSET',dir_ch,'T',int2str(ind_N2));   
                 x3   = load(name);
                 x3   = resample(x3,F1,F2);
                 
