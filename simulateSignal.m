@@ -1,100 +1,105 @@
-function generate_signals(X, Az, output_dir)
+function simulateSignal(X, Az, output_dir)
 
-%Simulate acoustic mixture for the two-source scenario with locations at az and given input files.
-%Output: Binaural signals for the individual sources and for the mixture.
+% Simulate acoustic mixture for the two-source scenario with locations at az and given input files.
+% Output: Binaural signals for the individual sources and for the mixture.
 
-
-nrsource=length(Az);
-if size(X,1)~=nrsource
-    'eror: X(nrsource,max_signal)'
+if isunix == 1
+    dir_ch = '/';
 end
 
-name_l=strcat(output_dir,'\Left');
-name_r=strcat(output_dir,'\Right');
-name_l1=strcat(output_dir,'\Left1');
-name_r1=strcat(output_dir,'\Right1');
-name_l2=strcat(output_dir,'\Left2');
-name_r2=strcat(output_dir,'\Right2');
+if ispc == 1
+    dir_ch = '\';
+end
 
+nrsource = length(Az);
 
-addpath HRTF\matlab_scripts\;
+if size(X,1) ~= nrsource
+    disp('error: X(nrsource,max_signal)')
+end
+
+name_l  = strcat(output_dir,dir_ch,'Left');
+name_r  = strcat(output_dir,dir_ch,'Right');
+name_l1 = strcat(output_dir,dir_ch,'Left1');
+name_r1 = strcat(output_dir,dir_ch,'Right1');
+name_l2 = strcat(output_dir,dir_ch,'Left2');
+name_r2 = strcat(output_dir,dir_ch,'Right2');
+
+hrtfPath = strcat('HRTF',dir_ch,'matlab_scripts',dir_ch);
+addpath(genpath(hrtfPath));
+
 
 % signal coming from az1
 
-az=Az(1);
-[hrtf]=readhrtf(0,abs(az),'H');
+az = Az(1);
+[hrtf] = readhrtf(0,abs(az),'H');
 
-if az>=0
-hl=[hrtf(1,:)];
-hr=[hrtf(2,:)];
+if az >= 0
+    hl = [hrtf(1,:)];
+    hr = [hrtf(2,:)];
 else
-hl=[hrtf(2,:)];
-hr=[hrtf(1,:)];
+    hl = [hrtf(2,:)];
+    hr = [hrtf(1,:)];
 end
 
-x=X(1,:);
-left1=conv(x,hl);
-right1=conv(x,hr);
+x = X(1,:);
 
+left1  = conv(x,hl);
+right1 = conv(x,hr);
     
-left2=zeros(size(left1));
-right2=zeros(size(right1));
+left2  = zeros(size(left1));
+right2 = zeros(size(right1));
    
 % interference
 
-for n=2:nrsource
+for n = 2:nrsource
+    az     = Az(n);
+    [hrtf] = readhrtf(0,abs(az),'H');
 
-az=Az(n);
-[hrtf]=readhrtf(0,abs(az),'H');
+    if az >= 0
+        hl = [hrtf(1,:)];
+        hr = [hrtf(2,:)];
+    else
+        hl = [hrtf(2,:)];
+        hr = [hrtf(1,:)];
+    end
 
-if az>=0
-hl=[hrtf(1,:)];
-hr=[hrtf(2,:)];
-else
-hl=[hrtf(2,:)];
-hr=[hrtf(1,:)];
+    x = X(n,:);
+
+    left2  = left2 + conv(x,hl);
+    right2 = right2 + conv(x,hr);
 end
 
-x=X(n,:);
-left2=left2+conv(x,hl);
-right2=right2+conv(x,hr);
-
-end
 
 % the sum of the 2 signals 
 
+left  = left1 + left2;
+right = right1 + right2;
 
-left=left1+left2;
-
-right=right1+ right2;
-
-
-f=fopen( name_l,'w');
+f = fopen( name_l,'w');
 fprintf(f,'%f\n ',left);
 fclose(f);
 
-f=fopen(name_r,'w');
+f = fopen(name_r,'w');
 fprintf(f,'%f\n',right);
 fclose(f);
 
-if nrsource>1
-
-f=fopen( name_l1,'w');
-fprintf(f,'%f\n ',left1);
-fclose(f);
-
-f=fopen(name_r1,'w');
-fprintf(f,'%f\n',right1);
-fclose(f);
-
-f=fopen( name_l2,'w');
-fprintf(f,'%f\n ',left2);
-fclose(f);
-
-f=fopen(name_r2,'w');
-fprintf(f,'%f\n',right2);
-fclose(f);
-
+if nrsource > 1
+    f = fopen( name_l1,'w');
+    fprintf(f,'%f\n ',left1);
+    fclose(f);
+    
+    f = fopen(name_r1,'w');
+    fprintf(f,'%f\n',right1);
+    fclose(f);
+    
+    f = fopen( name_l2,'w');
+    fprintf(f,'%f\n ',left2);
+    fclose(f);
+    
+    f = fopen(name_r2,'w');
+    fprintf(f,'%f\n',right2);
+    fclose(f);
+end
 end
 
 
