@@ -22,30 +22,30 @@ u = rand(size(P));
 x = norminv(u,0,0.3);
 P = P + x;
 
-if mod(P,128) ~= 0
-    P = P(1:length(P)-mod(P,128));
+if mod(length(P),max_channel) ~= 0
+    P = P(1:length(P)-mod(length(P),128));
 end
 
 P = reshape(P,max_channel,length(P)/max_channel);
 
 L = load(namefile_IID);
 
-if mod(L,128) ~= 0
-    L = L(1:length(L)-mod(L,128));
+if mod(length(L),max_channel) ~= 0
+    L = L(1:length(L)-mod(length(L),128));
 end
 
 L = reshape(L,max_channel,length(L)/max_channel);
 
 R = load(namefile_Ratio);
 
-if mod(R,128) ~= 0
-    R = R(1:length(R)-mod(R,128));
+if mod(length(R),max_channel) ~= 0
+    R = R(1:length(R)-mod(length(R),128));
 end
 
 R = reshape(R,max_channel,length(R)/max_channel);
 
 for chan = 1:max_channel
-    fprintf('chan %d',chan)
+    fprintf('chan %d\n',chan)
     n = size(R,2);
     I1 = find(R(chan,:)>0.5);
     I2 = find(R(chan,:)<=0.5);
