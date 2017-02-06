@@ -11,7 +11,7 @@ Useful Outputs:
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <ieee754.h>
+//#include <ieeefp.h>
 #include "common.h"
 
 typedef struct

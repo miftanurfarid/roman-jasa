@@ -6,7 +6,7 @@ Adapted by Nicoleta Roman, DeLiang Wang & Guy J. Brown (2003) to compute referen
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <ieee754.h>
+//#include <ieeefp.h>
 #include "common.h"
 
 

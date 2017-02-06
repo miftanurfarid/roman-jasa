@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <ieee754.h>
+//#include <ieeefp.h>
 #include "common.h"
 
 
